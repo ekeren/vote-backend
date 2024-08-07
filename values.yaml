@@ -1,1 +1,30 @@
 revision: latest
+resources:
+  - apiVersion: acme.com/v1
+    kind: Workload
+    metadata:
+      name: voting-app-backend
+    route: /api(/|$)(.*)
+    rewrite: /$2
+    image: wingcloudbot/vote-backend:sha-{{ .Values.revision }}
+    replicas: 3
+    port: 3000
+    env:
+      POSTGRES_HOST: ${ref://postgres.acme.com/voting-database/host}
+      POSTGRES_PORT: ${ref://postgres.acme.com/voting-database/port}
+      POSTGRES_USER: ${ref://postgres.acme.com/voting-database/user}
+      POSTGRES_DB: ${ref://postgres.acme.com/voting-database/database}
+    envSecrets:
+      POSTGRES_PASSWORD:
+        name: ${ref://postgres.acme.com/voting-database/passwordSecret}
+        key: ${ref://postgres.acme.com/voting-database/passwordKey}
+    - apiVersion: acme.com/v1
+      kind: Cron
+      metadata:
+        name: ping
+      schedule: "* * * * *"
+      image: busybox:1.28
+      command:
+        - /bin/sh
+        - -c
+        - date; echo World
