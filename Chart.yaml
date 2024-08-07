@@ -1,0 +1,10 @@
+apiVersion: v2
+name: vote-backend
+description: Helm chart for vote-backend
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
+apiVersion: acme.com/v1
+kind: Postgres
+metadata:
+  name: voting-database
