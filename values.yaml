@@ -1,6 +1,10 @@
 revision: latest
 resources:
   - apiVersion: acme.com/v1
+    kind: Postgres
+    metadata:
+      name: voting-database
+  - apiVersion: acme.com/v1
     kind: Workload
     metadata:
       name: voting-app-backend
